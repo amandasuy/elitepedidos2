@@ -137,17 +137,11 @@ export const useStore2PDVCashRegister = () => {
         console.log(`✅ Carregadas ${entriesData?.length || 0} movimentações de caixa da Loja 2`);
         
         // Calcular resumo manualmente para Loja 2 - INCLUIR TODAS AS FORMAS DE PAGAMENTO
-        const salesEntries = entriesData?.filter(e => 
-          e.type === 'income' && 
-          e.description.includes('Venda')
-        ) || [];
+        const salesEntries = entriesData?.filter(e => e.type === 'sale') || [];
         
         const salesTotal = salesEntries.reduce((sum, e) => sum + e.amount, 0);
         
-        const otherIncomeTotal = entriesData?.filter(e => 
-          e.type === 'income' && 
-          !e.description.includes('Venda')
-        ).reduce((sum, e) => sum + e.amount, 0) || 0;
+        const otherIncomeTotal = entriesData?.filter(e => e.type === 'other_income').reduce((sum, e) => sum + e.amount, 0) || 0;
         
         const expenseTotal = entriesData?.filter(e => e.type === 'expense').reduce((sum, e) => sum + e.amount, 0) || 0;
         

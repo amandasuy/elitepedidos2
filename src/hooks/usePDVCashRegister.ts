@@ -250,9 +250,7 @@ export const usePDVCashRegister = () => {
               .from('pdv_cash_entries')
               .select('*')
               .eq('register_id', openRegister.id) 
-              .eq('type', 'income')
-              .not('description', 'ilike', 'Venda #%')
-              .not('description', 'ilike', 'Delivery #%');
+              .eq('type', 'other_income');
               
             // Buscar saídas
             const { data: expenseData } = await supabase

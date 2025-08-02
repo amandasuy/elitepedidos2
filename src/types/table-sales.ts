@@ -22,7 +22,7 @@ export interface TableSale {
   subtotal: number;
   discount_amount: number;
   total_amount: number;
-  payment_type?: 'dinheiro' | 'pix' | 'cartao_credito' | 'cartao_debito' | 'voucher' | 'misto';
+  payment_type?: string;
   change_amount: number;
   status: 'aberta' | 'fechada' | 'cancelada';
   notes?: string;
