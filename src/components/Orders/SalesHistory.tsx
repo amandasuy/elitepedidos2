@@ -130,6 +130,8 @@ const SalesHistory: React.FC<SalesHistoryProps> = ({ storeId }) => {
     try {
       setLoading(true);
       setError(null);
+      
+      console.log(`🔄 Carregando vendas da Loja ${storeId}...`);
 
       if (!supabaseConfigured) {
         console.warn('⚠️ Supabase não configurado - usando dados de demonstração');
@@ -167,25 +169,31 @@ const SalesHistory: React.FC<SalesHistoryProps> = ({ storeId }) => {
         return;
       }
 
-      console.log(`🔄 Carregando histórico de vendas da Loja ${storeId}...`);
-      
       const { start, end } = getDateRange();
       const tableName = storeId === 1 ? 'pdv_sales' : 'store2_sales';
       const itemsTableName = storeId === 1 ? 'pdv_sale_items' : 'store2_sale_items';
+      
+      console.log(`📊 Buscando vendas na tabela: ${tableName}`);
+      console.log(`📅 Período: ${start} até ${end}`);
       
       // Buscar vendas com itens
       const { data, error } = await supabase
         .from(tableName)
         .select(`
           *,
-          ${itemsTableName}(*)
+          ${itemsTableName}!inner(*)
         `)
         .gte('created_at', start)
         .lte('created_at', end)
         .order('created_at', { ascending: false })
-        .limit(50);
+        .limit(100);
 
-      if (error) throw error;
+      if (error) {
+        console.error(`❌ Erro ao buscar vendas da ${tableName}:`, error);
+        throw error;
+      }
+      
+      console.log(`📦 Dados brutos recebidos:`, data);
 
       // Processar dados para formato consistente
       const processedSales = (data || []).map(sale => ({
@@ -204,14 +212,56 @@ const SalesHistory: React.FC<SalesHistoryProps> = ({ storeId }) => {
         cancel_reason: sale.cancel_reason,
         created_at: sale.created_at,
         channel: sale.channel || (storeId === 1 ? 'pdv' : 'loja2'),
-        items: sale[itemsTableName] || []
+        items: Array.isArray(sale[itemsTableName]) ? sale[itemsTableName] : []
       }));
 
       setSales(processedSales);
-      console.log(`✅ ${processedSales.length} vendas carregadas da Loja ${storeId}`);
+      console.log(`✅ ${processedSales.length} vendas processadas da Loja ${storeId}`);
     } catch (err) {
       console.error(`❌ Erro ao carregar vendas da Loja ${storeId}:`, err);
       setError(err instanceof Error ? err.message : 'Erro ao carregar vendas');
+      
+      // Em caso de erro, tentar buscar apenas as vendas sem os itens
+      try {
+        console.log('🔄 Tentando buscar vendas sem itens...');
+        const tableName = storeId === 1 ? 'pdv_sales' : 'store2_sales';
+        const { start, end } = getDateRange();
+        
+        const { data: salesOnly, error: salesError } = await supabase
+          .from(tableName)
+          .select('*')
+          .gte('created_at', start)
+          .lte('created_at', end)
+          .order('created_at', { ascending: false })
+          .limit(100);
+          
+        if (!salesError && salesOnly) {
+          const processedSales = salesOnly.map(sale => ({
+            id: sale.id,
+            sale_number: sale.sale_number,
+            operator_name: sale.operator_name,
+            customer_name: sale.customer_name,
+            customer_phone: sale.customer_phone,
+            subtotal: sale.subtotal,
+            discount_amount: sale.discount_amount || 0,
+            total_amount: sale.total_amount,
+            payment_type: sale.payment_type,
+            change_amount: sale.change_amount || 0,
+            is_cancelled: sale.is_cancelled || false,
+            cancelled_at: sale.cancelled_at,
+            cancel_reason: sale.cancel_reason,
+            created_at: sale.created_at,
+            channel: sale.channel || (storeId === 1 ? 'pdv' : 'loja2'),
+            items: []
+          }));
+          
+          setSales(processedSales);
+          console.log(`✅ ${processedSales.length} vendas carregadas sem itens da Loja ${storeId}`);
+          setError('Vendas carregadas, mas itens não disponíveis');
+        }
+      } catch (fallbackError) {
+        console.error('❌ Erro no fallback:', fallbackError);
+      }
     } finally {
       setLoading(false);
     }
@@ -242,6 +292,12 @@ const SalesHistory: React.FC<SalesHistoryProps> = ({ storeId }) => {
   useEffect(() => {
     fetchSales();
   }, [dateFilter, storeId]);
+  
+  // Debug: Log quando o componente monta
+  useEffect(() => {
+    console.log(`🏪 SalesHistory montado para Loja ${storeId}`);
+    console.log(`📊 Supabase configurado: ${supabaseConfigured}`);
+  }, [storeId, supabaseConfigured]);
 
   return (
     <div className="space-y-6">
