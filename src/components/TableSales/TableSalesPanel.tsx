@@ -176,7 +176,7 @@ const TableSalesPanel: React.FC<TableSalesPanelProps> = ({ storeId, operatorName
         .from(getTableName())
         .select(`
           *,
-          current_sale:${getSalesTableName()}!${getTableName()}_current_sale_id_fkey(*)
+          current_sale:${getSalesTableName()}(*)
         `)
         .eq('is_active', true)
         .order('number');
