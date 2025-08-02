@@ -581,9 +581,9 @@ const Cart: React.FC<CartProps> = ({
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center z-50 transition-opacity duration-300">
-      <div className="bg-white w-full sm:max-w-md sm:rounded-2xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl transform transition-transform duration-300 ease-out">
+      <div className="bg-white w-full sm:max-w-md sm:rounded-2xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl transform transition-transform duration-300 ease-out relative">
         {/* Header */}
-        <div className="flex items-center justify-between p-5 border-b sticky top-0 bg-white z-10">
+        <div className="flex items-center justify-between p-5 border-b sticky top-0 bg-white z-30">
           <h2 className="text-xl font-bold text-gray-800 flex items-center gap-3">
             {showCheckout ? (
               <>
@@ -610,7 +610,7 @@ const Cart: React.FC<CartProps> = ({
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto px-5 py-4">
+        <div className="flex-1 overflow-y-auto px-5 py-4 pb-32">
           {!showCheckout ? (
             <div>
               {items.length === 0 ? (
@@ -720,7 +720,7 @@ const Cart: React.FC<CartProps> = ({
                 <label className="block text-sm font-medium text-gray-700">
                   Nome completo *
                 </label>
-                <div className="relative">
+                <div className="relative z-10">
                   <input
                     type="text"
                     value={deliveryInfo.name}
@@ -755,7 +755,7 @@ const Cart: React.FC<CartProps> = ({
                 <label className="block text-sm font-medium text-gray-700">
                   Telefone *
                 </label>
-                <div className="relative">
+                <div className="relative z-10">
                   <input
                     type="tel"
                     value={deliveryInfo.phone}
@@ -786,7 +786,7 @@ const Cart: React.FC<CartProps> = ({
                 <label className="block text-sm font-medium text-gray-700">
                   Bairro *
                 </label>
-                <div className="relative">
+                <div className="relative z-10">
                   <MapPin size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                   <select
                     value={deliveryInfo.neighborhood}
@@ -1001,7 +1001,7 @@ const Cart: React.FC<CartProps> = ({
 
         {/* Footer */}
         {items.length > 0 && (
-          <div className="border-t p-5 space-y-4 bg-white sticky bottom-0 shadow-md">
+          <div className="border-t p-5 space-y-4 bg-white fixed bottom-0 left-0 right-0 sm:relative sm:bottom-auto shadow-md z-40">
             {showCheckout && (
               <div className="space-y-2">
                 <div className="flex justify-between text-sm text-gray-600">
@@ -1036,13 +1036,13 @@ const Cart: React.FC<CartProps> = ({
                 <button
                   onClick={() => setShowCheckout(true)}
                   disabled={disabled}
-                  className="w-full bg-green-500 hover:bg-green-600 disabled:bg-gray-300 text-white py-3.5 rounded-xl font-semibold transition-colors shadow-md hover:shadow-lg"
+                  className="w-full bg-green-500 hover:bg-green-600 disabled:bg-gray-300 text-white py-3.5 rounded-xl font-semibold transition-colors shadow-md hover:shadow-lg relative z-20"
                 >
                   {disabled ? 'Loja Fechada' : 'Finalizar Pedido'}
                 </button>
                 <button
                   onClick={handleContinueShopping}
-                  className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 rounded-xl font-medium transition-colors flex items-center justify-center gap-2"
+                  className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 rounded-xl font-medium transition-colors flex items-center justify-center gap-2 relative z-20"
                 >
                   <ArrowLeft size={18} />
                   Continuar Comprando
@@ -1053,19 +1053,19 @@ const Cart: React.FC<CartProps> = ({
                 <button
                   onClick={handleSendOrder}
                   disabled={!isFormValid() || disabled || !isCashRegisterOpen}
-                  className="w-full bg-green-500 hover:bg-green-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-white py-3.5 rounded-xl font-semibold transition-colors flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
+                  className="w-full bg-green-500 hover:bg-green-600 disabled:bg-gray-300 disabled:cursor-not-allowed text-white py-3.5 rounded-xl font-semibold transition-colors flex items-center justify-center gap-2 shadow-md hover:shadow-lg relative z-20"
                 >
                   <MessageCircle size={20} />
                   {disabled ? 'Loja Fechada' : !isCashRegisterOpen ? 'Caixa Fechado' : 'Finalizar Pedido'}
                 </button>
                 {!isCashRegisterOpen && !disabled && (
-                  <div className="text-xs text-red-600 text-center mt-2 bg-red-50 p-2 rounded-lg">
+                  <div className="text-xs text-red-600 text-center mt-2 bg-red-50 p-2 rounded-lg relative z-20">
                     Não é possível finalizar pedidos sem um caixa aberto
                   </div>
                 )}
                 <button
                   onClick={() => setShowCheckout(false)}
-                  className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 rounded-xl font-medium transition-colors flex items-center justify-center gap-2 mt-2"
+                  className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 rounded-xl font-medium transition-colors flex items-center justify-center gap-2 mt-2 relative z-20"
                 >
                   <ArrowLeft size={18} />
                   Voltar ao Carrinho
