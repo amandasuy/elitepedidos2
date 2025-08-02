@@ -209,7 +209,7 @@ const ManualOrderForm: React.FC<ManualOrderFormProps> = ({ onClose, onOrderCreat
   
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-2xl max-w-6xl w-full max-h-[95vh] overflow-hidden flex flex-col">
         <div className="p-6 border-b border-gray-200">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-semibold text-gray-800 flex items-center gap-2">
@@ -225,10 +225,11 @@ const ManualOrderForm: React.FC<ManualOrderFormProps> = ({ onClose, onOrderCreat
           </div>
         </div>
         
-        <form onSubmit={handleSubmit} className="p-6">
+        <div className="flex-1 overflow-y-auto">
+          <form onSubmit={handleSubmit} className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Customer Information */}
-            <div className="space-y-4">
+            <div className="space-y-3">
               <h3 className="text-lg font-medium text-gray-800 mb-3">Dados do Cliente</h3>
               
               <div>
@@ -258,7 +259,7 @@ const ManualOrderForm: React.FC<ManualOrderFormProps> = ({ onClose, onOrderCreat
                     type="tel"
                     value={customerPhone}
                     onChange={(e) => setCustomerPhone(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
                     placeholder="(00) 00000-0000"
                     required
                   />
@@ -274,7 +275,7 @@ const ManualOrderForm: React.FC<ManualOrderFormProps> = ({ onClose, onOrderCreat
                   <select
                     value={customerNeighborhood}
                     onChange={(e) => setCustomerNeighborhood(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
                     required
                   >
                     <option value="">Selecione o bairro</option>
@@ -286,7 +287,7 @@ const ManualOrderForm: React.FC<ManualOrderFormProps> = ({ onClose, onOrderCreat
                   </select>
                 </div>
                 {customerNeighborhood && (
-                  <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded text-sm">
+                  <div className="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm">
                     <div className="flex justify-between">
                       <span>Taxa de entrega:</span>
                       <span className="font-medium">{formatPrice(getDeliveryFee())}</span>
@@ -307,7 +308,7 @@ const ManualOrderForm: React.FC<ManualOrderFormProps> = ({ onClose, onOrderCreat
                   type="text"
                   value={customerAddress}
                   onChange={(e) => setCustomerAddress(e.target.value)}
-                  className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
                   placeholder="Rua, número"
                   required
                 />
@@ -321,7 +322,7 @@ const ManualOrderForm: React.FC<ManualOrderFormProps> = ({ onClose, onOrderCreat
                   type="text"
                   value={customerComplement}
                   onChange={(e) => setCustomerComplement(e.target.value)}
-                  className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
                   placeholder="Apartamento, bloco, etc."
                 />
               </div>
@@ -330,7 +331,7 @@ const ManualOrderForm: React.FC<ManualOrderFormProps> = ({ onClose, onOrderCreat
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Forma de pagamento *
                 </label>
-                <div className="space-y-2">
+                <div className="grid grid-cols-1 gap-2">
                   <label className="flex items-center gap-2">
                     <input
                       type="radio"
@@ -377,7 +378,7 @@ const ManualOrderForm: React.FC<ManualOrderFormProps> = ({ onClose, onOrderCreat
                     step="0.01"
                     value={changeFor || ''}
                     onChange={(e) => setChangeFor(parseFloat(e.target.value) || undefined)}
-                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
                     placeholder="Valor para troco"
                   />
                 </div>
@@ -385,10 +386,10 @@ const ManualOrderForm: React.FC<ManualOrderFormProps> = ({ onClose, onOrderCreat
             </div>
             
             {/* Order Items */}
-            <div className="space-y-4">
+            <div className="space-y-3">
               <h3 className="text-lg font-medium text-gray-800 mb-3">Itens do Pedido</h3>
               
-              <div className="bg-gray-50 rounded-lg p-4 mb-4">
+              <div className="bg-gray-50 rounded-lg p-4 max-h-96 overflow-y-auto">
                 <div className="relative mb-3">
                   <Search size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
                   <input
@@ -396,16 +397,16 @@ const ManualOrderForm: React.FC<ManualOrderFormProps> = ({ onClose, onOrderCreat
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     placeholder="Buscar produtos..."
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
                   />
                 </div>
                 
                 {searchTerm && filteredProducts.length > 0 && (
-                  <div className="max-h-60 overflow-y-auto border border-gray-200 rounded-lg mb-3">
+                  <div className="max-h-48 overflow-y-auto border border-gray-200 rounded-lg mb-3">
                     {filteredProducts.map(product => (
                       <div 
                         key={product.id}
-                        className="p-2 hover:bg-gray-100 cursor-pointer border-b border-gray-200 last:border-b-0"
+                        className="p-3 hover:bg-gray-100 cursor-pointer border-b border-gray-200 last:border-b-0"
                         onClick={() => {
                           setSelectedProduct(product);
                           setSearchTerm('');
@@ -415,7 +416,7 @@ const ManualOrderForm: React.FC<ManualOrderFormProps> = ({ onClose, onOrderCreat
                           <img 
                             src={product.image} 
                             alt={product.name} 
-                            className="w-10 h-10 object-cover rounded"
+                            className="w-12 h-12 object-cover rounded"
                           />
                           <div>
                             <div className="font-medium">{product.name}</div>
@@ -428,13 +429,13 @@ const ManualOrderForm: React.FC<ManualOrderFormProps> = ({ onClose, onOrderCreat
                 )}
                 
                 {selectedProduct && (
-                  <div className="bg-white p-3 rounded-lg border border-gray-200 mb-3">
+                  <div className="bg-white p-4 rounded-lg border border-gray-200 mb-3">
                     <div className="flex justify-between items-start mb-2">
                       <div className="flex items-center gap-2">
                         <img 
                           src={selectedProduct.image} 
                           alt={selectedProduct.name} 
-                          className="w-12 h-12 object-cover rounded"
+                          className="w-16 h-16 object-cover rounded"
                         />
                         <div>
                           <div className="font-medium">{selectedProduct.name}</div>
@@ -450,21 +451,21 @@ const ManualOrderForm: React.FC<ManualOrderFormProps> = ({ onClose, onOrderCreat
                       </button>
                     </div>
                     
-                    <div className="flex items-center gap-3 mb-3">
+                    <div className="flex items-center gap-4 mb-3">
                       <label className="text-sm font-medium text-gray-700">Quantidade:</label>
                       <div className="flex items-center gap-2">
                         <button
                           type="button"
                           onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                          className="p-1 bg-gray-100 hover:bg-gray-200 rounded-full"
+                          className="p-2 bg-gray-100 hover:bg-gray-200 rounded-full"
                         >
                           <Minus size={16} />
                         </button>
-                        <span className="w-8 text-center">{quantity}</span>
+                        <span className="w-12 text-center font-medium">{quantity}</span>
                         <button
                           type="button"
                           onClick={() => setQuantity(quantity + 1)}
-                          className="p-1 bg-gray-100 hover:bg-gray-200 rounded-full"
+                          className="p-2 bg-gray-100 hover:bg-gray-200 rounded-full"
                         >
                           <Plus size={16} />
                         </button>
@@ -476,16 +477,16 @@ const ManualOrderForm: React.FC<ManualOrderFormProps> = ({ onClose, onOrderCreat
                       <textarea
                         value={observations}
                         onChange={(e) => setObservations(e.target.value)}
-                        className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm"
+                        className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-sm resize-none"
                         placeholder="Ex: Sem açúcar, mais granola..."
-                        rows={2}
+                        rows={3}
                       />
                     </div>
                     
                     <button
                       type="button"
                       onClick={addProduct}
-                      className="w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg font-medium transition-colors"
+                      className="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg font-semibold transition-colors"
                     >
                       Adicionar ao Pedido
                     </button>
@@ -493,21 +494,21 @@ const ManualOrderForm: React.FC<ManualOrderFormProps> = ({ onClose, onOrderCreat
                 )}
                 
                 {items.length === 0 ? (
-                  <div className="text-center py-4 text-gray-500">
+                  <div className="text-center py-8 text-gray-500">
                     <ShoppingBag size={32} className="mx-auto text-gray-300 mb-2" />
                     <p>Nenhum item adicionado</p>
                     <p className="text-sm">Busque e adicione produtos ao pedido</p>
                   </div>
                 ) : (
-                  <div className="space-y-3">
+                  <div className="space-y-2 max-h-64 overflow-y-auto">
                     {items.map(item => (
-                      <div key={item.id} className="bg-white p-3 rounded-lg border border-gray-200">
+                      <div key={item.id} className="bg-white p-4 rounded-lg border border-gray-200">
                         <div className="flex justify-between items-start">
                           <div className="flex items-start gap-2">
                             <img 
                               src={item.product_image} 
                               alt={item.product_name} 
-                              className="w-10 h-10 object-cover rounded"
+                              className="w-12 h-12 object-cover rounded"
                             />
                             <div>
                               <div className="font-medium">{item.product_name}</div>
@@ -534,19 +535,19 @@ const ManualOrderForm: React.FC<ManualOrderFormProps> = ({ onClose, onOrderCreat
                             </button>
                           </div>
                         </div>
-                        <div className="flex items-center gap-2 mt-2">
+                        <div className="flex items-center gap-3 mt-3">
                           <button
                             type="button"
                             onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                            className="p-1 bg-gray-100 hover:bg-gray-200 rounded-full"
+                            className="p-2 bg-gray-100 hover:bg-gray-200 rounded-full"
                           >
                             <Minus size={14} />
                           </button>
-                          <span className="text-sm">{item.quantity}</span>
+                          <span className="text-sm font-medium w-8 text-center">{item.quantity}</span>
                           <button
                             type="button"
                             onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                            className="p-1 bg-gray-100 hover:bg-gray-200 rounded-full"
+                            className="p-2 bg-gray-100 hover:bg-gray-200 rounded-full"
                           >
                             <Plus size={14} />
                           </button>
@@ -558,20 +559,20 @@ const ManualOrderForm: React.FC<ManualOrderFormProps> = ({ onClose, onOrderCreat
               </div>
               
               {/* Order Summary */}
-              <div className="bg-gray-50 rounded-lg p-4">
+              <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-4 border border-green-200">
                 <h4 className="font-medium text-gray-800 mb-3">Resumo do Pedido</h4>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span>Subtotal:</span>
-                    <span>{formatPrice(getTotalPrice())}</span>
+                    <span className="font-medium">{formatPrice(getTotalPrice())}</span>
                   </div>
                   {customerNeighborhood && (
                     <div className="flex justify-between">
                       <span>Taxa de entrega:</span>
-                      <span>{formatPrice(getDeliveryFee())}</span>
+                      <span className="font-medium">{formatPrice(getDeliveryFee())}</span>
                     </div>
                   )}
-                  <div className="flex justify-between font-bold text-lg pt-2 border-t border-gray-200">
+                  <div className="flex justify-between font-bold text-xl pt-3 border-t border-green-200">
                     <span>Total:</span>
                     <span className="text-green-600">{formatPrice(getTotalPrice() + getDeliveryFee())}</span>
                   </div>
@@ -579,19 +580,23 @@ const ManualOrderForm: React.FC<ManualOrderFormProps> = ({ onClose, onOrderCreat
               </div>
             </div>
           </div>
-          
-          <div className="mt-6 flex justify-end gap-3">
+          </form>
+        </div>
+        
+        {/* Fixed Footer */}
+        <div className="border-t border-gray-200 p-6 bg-gray-50">
+          <div className="flex justify-end gap-3">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
+              className="px-6 py-3 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition-colors"
             >
               Cancelar
             </button>
             <button
-              type="submit"
+              onClick={handleSubmit}
               disabled={isSubmitting || items.length === 0 || !isCashRegisterOpen}
-              className="px-6 py-2 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-300 text-white rounded-lg transition-colors flex items-center gap-2"
+              className="px-8 py-3 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-300 text-white rounded-lg font-semibold transition-colors flex items-center gap-2"
             >
               {isSubmitting ? (
                 <>
@@ -605,16 +610,17 @@ const ManualOrderForm: React.FC<ManualOrderFormProps> = ({ onClose, onOrderCreat
                 </>
               )}
             </button>
-            {!isCashRegisterOpen && (
-              <div className="absolute bottom-20 right-6 bg-red-100 text-red-700 px-4 py-2 rounded-lg text-sm">
-                <div className="flex items-center gap-2">
-                  <AlertCircle size={16} />
-                  <span>Não é possível criar pedidos sem um caixa aberto</span>
-                </div>
-              </div>
-            )}
           </div>
-        </form>
+          
+          {!isCashRegisterOpen && (
+            <div className="mt-3 bg-red-100 text-red-700 px-4 py-2 rounded-lg text-sm">
+              <div className="flex items-center gap-2">
+                <AlertCircle size={16} />
+                <span>Não é possível criar pedidos sem um caixa aberto</span>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
       
       {/* Success Message Overlay */}
