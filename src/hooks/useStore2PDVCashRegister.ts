@@ -63,12 +63,22 @@ export const useStore2PDVCashRegister = () => {
       
       console.log('🔄 Buscando status do caixa da Loja 2...');
       
+      // Add timeout to prevent hanging requests
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('Timeout: Conexão com Supabase demorou mais de 15 segundos')), 15000);
+      });
+      
       // Verificar se há caixa aberto do dia anterior
-      const { data: previousDayRegisters, error: previousDayError } = await supabase
+      const previousDayPromise = supabase
         .from('pdv2_cash_registers')
         .select('*')
         .is('closed_at', null)
         .order('opened_at', { ascending: false });
+      
+      const { data: previousDayRegisters, error: previousDayError } = await Promise.race([
+        previousDayPromise,
+        timeoutPromise
+      ]);
       
       if (!previousDayError && previousDayRegisters) {
         const yesterdayRegister = previousDayRegisters.find(register => {
@@ -83,13 +93,18 @@ export const useStore2PDVCashRegister = () => {
       }
       
       // Verificar se existe um caixa aberto para a Loja 2
-      const { data: openRegister, error: openError } = await supabase
+      const openRegisterPromise = supabase
         .from('pdv2_cash_registers')
         .select('*')
         .is('closed_at', null)
         .order('opened_at', { ascending: false })
         .limit(1)
         .maybeSingle();
+      
+      const { data: openRegister, error: openError } = await Promise.race([
+        openRegisterPromise,
+        timeoutPromise
+      ]);
       
       if (openError) {
         console.error('Erro ao buscar caixa ativo da Loja 2:', openError);
@@ -101,12 +116,17 @@ export const useStore2PDVCashRegister = () => {
         setCurrentRegister(openRegister);
         
         // Buscar entradas do caixa 
-        const { data: entriesData, error: entriesError } = await supabase
+        const entriesPromise = supabase
           .from('pdv2_cash_entries')
           .select('*')
           .eq('register_id', openRegister.id)
           .order('created_at', { ascending: false });
           
+        const { data: entriesData, error: entriesError } = await Promise.race([
+          entriesPromise,
+          timeoutPromise
+        ]);
+        
         if (entriesError) {
           console.error('Erro ao buscar entradas da Loja 2:', entriesError);
           throw entriesError;

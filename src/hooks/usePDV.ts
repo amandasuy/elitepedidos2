@@ -10,6 +10,7 @@ export const usePDVProducts = () => {
   const fetchProducts = useCallback(async () => {
     try {
       setLoading(true);
+      setError(null);
       
       // Check if Supabase is properly configured
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
@@ -81,21 +82,48 @@ export const usePDVProducts = () => {
         return;
       }
       
-      const { data, error } = await supabase
+      // Add timeout to prevent hanging requests
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('Timeout: Conexão com Supabase demorou mais de 10 segundos')), 10000);
+      });
+      
+      const fetchPromise = supabase
         .from('pdv_products')
         .select('*')
         .eq('is_active', true)
         .order('name');
+      
+      const { data, error } = await Promise.race([fetchPromise, timeoutPromise]);
 
       if (error) throw error;
       setProducts(data || []);
+      console.log(`✅ ${data?.length || 0} produtos carregados do banco`);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erro ao carregar produtos';
       console.error('Erro ao carregar produtos:', errorMessage);
       setError(errorMessage);
       
-      // Set empty products array on error
-      setProducts([]);
+      // Fallback para produtos de demonstração em caso de erro
+      console.warn('🔄 Usando produtos de demonstração devido ao erro');
+      const demoProducts: PDVProduct[] = [
+        {
+          id: 'demo-acai-300',
+          code: 'ACAI300',
+          name: 'Açaí 300ml',
+          category: 'acai',
+          is_weighable: false,
+          unit_price: 15.90,
+          image_url: 'https://images.pexels.com/photos/1092730/pexels-photo-1092730.jpeg?auto=compress&cs=tinysrgb&w=400',
+          stock_quantity: 100,
+          min_stock: 10,
+          is_active: true,
+          barcode: '',
+          description: 'Açaí tradicional 300ml',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        }
+      ];
+      setProducts(demoProducts);
     } finally {
       setLoading(false);
     }

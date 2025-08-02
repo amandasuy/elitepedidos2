@@ -103,12 +103,22 @@ export const usePDVCashRegister = () => {
       
       console.log('🔄 Buscando status do caixa e movimentações...');
       
+      // Add timeout to prevent hanging requests
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('Timeout: Conexão com Supabase demorou mais de 15 segundos')), 15000);
+      });
+      
       // Verificar se há caixa aberto do dia anterior
-      const { data: previousDayRegisters, error: previousDayError } = await supabase
+      const previousDayPromise = supabase
         .from('pdv_cash_registers')
         .select('*')
         .is('closed_at', null)
         .order('opened_at', { ascending: false });
+      
+      const { data: previousDayRegisters, error: previousDayError } = await Promise.race([
+        previousDayPromise,
+        timeoutPromise
+      ]);
       
       if (!previousDayError && previousDayRegisters) {
         const yesterdayRegister = previousDayRegisters.find(register => {
@@ -123,13 +133,18 @@ export const usePDVCashRegister = () => {
       }
       
       // Verificar se existe um caixa aberto
-      const { data: openRegister, error: openError } = await supabase
+      const openRegisterPromise = supabase
         .from('pdv_cash_registers')
         .select('*')
         .is('closed_at', null)
         .order('opened_at', { ascending: false })
         .limit(1)
         .maybeSingle();
+      
+      const { data: openRegister, error: openError } = await Promise.race([
+        openRegisterPromise,
+        timeoutPromise
+      ]);
       
       if (openError) {
         console.error('Erro ao buscar caixa ativo:', openError);

@@ -45,9 +45,14 @@ if (!supabaseUrl || !supabaseAnonKey || supabaseUrl.includes('placeholder') || s
     },
     // Add retry and timeout configuration
     fetch: (url, options = {}) => {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+      
       return fetch(url, {
         ...options,
-        signal: AbortSignal.timeout(15000), // 15 second timeout
+        signal: controller.signal,
+      }).finally(() => {
+        clearTimeout(timeoutId);
       });
     }
   })
