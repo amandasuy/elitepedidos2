@@ -6,7 +6,7 @@ import { usePermissions } from '../../hooks/usePermissions';
 interface CashRegisterCloseConfirmationProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: (closingAmount: number, justification?: string) => void;
+ onConfirm: (closingAmount: number, shouldPrint?: boolean, justification?: string) => void;
   register: PDVCashRegister | null;
   summary: PDVCashRegisterSummary | null;
   isProcessing: boolean;
@@ -348,7 +348,7 @@ const CashRegisterCloseConfirmation: React.FC<CashRegisterCloseConfirmationProps
                     Voltar
                   </button>
                   <button
-                    onClick={() => onConfirm(closingAmount, justification || undefined)}
+                   onClick={() => onConfirm(closingAmount, printMovements, justification || undefined)}
                     disabled={isProcessing || !canProceed}
                     className="flex-1 bg-green-500 hover:bg-green-600 disabled:bg-gray-300 text-white py-3 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
                   >

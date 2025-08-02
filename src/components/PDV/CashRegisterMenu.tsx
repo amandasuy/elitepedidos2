@@ -126,11 +126,14 @@ const CashRegisterMenu: React.FC = () => {
   };
 
   const handleConfirmClose = async (closingAmount: number, shouldPrint: boolean = false) => {
-    setIsClosing(true);
+   const handleConfirmClose = async (closingAmount: number, shouldPrint: boolean = false, justification?: string) => {
+     setIsClosing(true);
     setShowCloseConfirmation(false);
     
     try {
       console.log('🔒 Fechando caixa com valor:', closingAmount);
+     console.log('🖨️ Deve imprimir:', shouldPrint);
+     console.log('📝 Justificativa:', justification);
       console.log('📊 Summary antes do fechamento:', summary);
       const result = await closeCashRegister(closingAmount);
       
@@ -144,8 +147,10 @@ const CashRegisterMenu: React.FC = () => {
         });
         
         if (shouldPrint) {
+         console.log('🖨️ Abrindo modal de impressão...');
           setShowPrintView(true);
         } else {
+         console.log('📋 Abrindo diálogo de fechamento...');
           setShowCloseDialog(true);
         }
       } else {
