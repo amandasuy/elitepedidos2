@@ -1244,7 +1244,7 @@ const TableSalesPanel: React.FC<TableSalesPanelProps> = ({ storeId, operatorName
                       <p className="text-sm">Clique nos produtos para adicionar</p>
                     </div>
                   ) : (
-                    <div className="space-y-3">
+                    <div className="space-y-3 mb-6 max-h-60 overflow-y-auto pr-2">
                       {cart.map((item, index) => (
                         <div key={index} className="bg-gray-50 border border-gray-200 rounded-xl p-4 hover:shadow-md transition-shadow">
                           <div className="flex items-center justify-between mb-3">
