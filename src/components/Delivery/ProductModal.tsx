@@ -205,10 +205,10 @@ const ProductModal: React.FC<ProductModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 transition-opacity duration-300">
-      <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] shadow-xl overflow-hidden flex flex-col">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-2 sm:p-4 transition-opacity duration-300">
+      <div className="bg-white rounded-2xl w-full max-w-2xl h-[95vh] sm:h-[90vh] shadow-xl overflow-hidden flex flex-col">
         {/* Header with image */}
-        <div className="relative h-48">
+        <div className="relative h-32 sm:h-48 flex-shrink-0">
           <img
             src={imageToShow}
             alt={product.name}
@@ -220,7 +220,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
           
           {/* Product name on image */}
           <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
-            <h2 className="text-2xl font-bold">{product.name}</h2>
+            <h2 className="text-lg sm:text-2xl font-bold">{product.name}</h2>
           </div>
           
           {/* Close button */}
@@ -240,9 +240,9 @@ const ProductModal: React.FC<ProductModalProps> = ({
         </div>
 
         {/* Scrollable content */}
-        <div className="flex-1 overflow-y-auto" ref={contentRef}>
-          <div className="p-6">
-            <p className="text-gray-600 mb-2">{product.description}</p>
+        <div className="flex-1 overflow-y-auto min-h-0" ref={contentRef}>
+          <div className="p-4 sm:p-6">
+            <p className="text-gray-600 mb-2 text-sm sm:text-base">{product.description}</p>
             
             {/* Status de Disponibilidade */}
             <div className={`inline-flex items-center gap-2 text-sm mb-3 px-3 py-1.5 rounded-full ${
@@ -253,11 +253,11 @@ const ProductModal: React.FC<ProductModalProps> = ({
             </div>
             
             <div className="flex items-center gap-2 mt-3">
-              <span className="text-2xl font-bold text-green-600">
+              <span className="text-xl sm:text-2xl font-bold text-green-600">
                 {formatPrice(getCurrentPrice())}
               </span>
               {product.originalPrice && (
-                <span className="text-lg text-gray-500 line-through ml-2">
+                <span className="text-base sm:text-lg text-gray-500 line-through ml-2">
                   {formatPrice(product.originalPrice)}
                 </span>
               )}
@@ -265,8 +265,8 @@ const ProductModal: React.FC<ProductModalProps> = ({
 
             {/* Seleção de Tamanho */}
             {product.sizes && (
-              <div className="mt-6 mb-6">
-                <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center gap-2">
+              <div className="mt-4 sm:mt-6 mb-4 sm:mb-6">
+                <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-3 flex items-center gap-2">
                   <span className="bg-purple-100 text-purple-700 w-6 h-6 rounded-full flex items-center justify-center text-sm">1</span>
                   Escolha o tamanho:
                 </h3>
@@ -275,7 +275,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
                     <button
                       key={size.id}
                       onClick={() => setSelectedSize(size)}
-                      className={`w-full p-4 rounded-xl border-2 transition-all hover:shadow-md ${
+                      className={`w-full p-3 sm:p-4 rounded-xl border-2 transition-all hover:shadow-md ${
                         selectedSize?.id === size.id
                           ? 'border-purple-500 bg-purple-50 shadow-md'
                           : 'border-gray-200 hover:border-purple-200'
@@ -283,12 +283,12 @@ const ProductModal: React.FC<ProductModalProps> = ({
                     >
                       <div className="flex justify-between items-center">
                         <div className="text-left">
-                          <div className="font-medium">{size.name}</div>
+                          <div className="font-medium text-sm sm:text-base">{size.name}</div>
                           {size.description && (
                             <div className="text-sm text-gray-500">{size.description}</div>
                           )}
                         </div>
-                        <div className="font-bold text-purple-600">
+                        <div className="font-bold text-purple-600 text-sm sm:text-base">
                           {formatPrice(size.price)}
                         </div>
                       </div>
@@ -303,14 +303,14 @@ const ProductModal: React.FC<ProductModalProps> = ({
               <div 
                 key={group.id} 
                 id={`group-${group.id}`} 
-                className={`mb-8 p-4 rounded-xl transition-all ${
+                className={`mb-4 sm:mb-8 p-3 sm:p-4 rounded-xl transition-all ${
                   incompleteGroups.includes(group.id) 
                     ? 'border-2 border-red-300 bg-red-50' 
                     : ''
                 }`}
               >
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                  <h3 className="text-base sm:text-lg font-semibold text-gray-800 flex items-center gap-2">
                     <span className="bg-purple-100 text-purple-700 w-6 h-6 rounded-full flex items-center justify-center text-sm">{groupIndex + 2}</span>
                     {group.name}
                   </h3>
@@ -357,7 +357,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
                     return (
                       <label
                         key={complement.id}
-                        className={`flex items-center justify-between p-4 rounded-xl border-2 cursor-pointer transition-all hover:shadow-sm ${
+                        className={`flex items-center justify-between p-3 sm:p-4 rounded-xl border-2 cursor-pointer transition-all hover:shadow-sm ${
                           isSelected
                             ? 'border-green-500 bg-green-50 shadow-sm'
                             : canSelect
@@ -374,13 +374,13 @@ const ProductModal: React.FC<ProductModalProps> = ({
                             {isSelected && <Check size={12} className="text-white" />}
                           </div>
                           <div>
-                            <div className="font-medium text-gray-800">{complement.name}</div>
+                            <div className="font-medium text-gray-800 text-sm sm:text-base">{complement.name}</div>
                             {complement.description && (
                               <div className="text-sm text-gray-500">{complement.description}</div>
                             )}
                           </div>
                         </div>
-                        <div className="font-bold text-green-600">
+                        <div className="font-bold text-green-600 text-sm sm:text-base">
                           {complement.price > 0 ? formatPrice(complement.price) : 'Grátis'}
                         </div>
                         <div className="hidden">
@@ -408,7 +408,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
             
             {/* Validation Alert */}
             {showValidationAlert && (
-              <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl">
+              <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-red-50 border border-red-200 rounded-xl">
                 <div className="flex items-start gap-3">
                   <AlertTriangle size={20} className="text-red-600 mt-0.5 flex-shrink-0" />
                   <div>
@@ -431,8 +431,8 @@ const ProductModal: React.FC<ProductModalProps> = ({
             )}
 
             {/* Observações */}
-            <div className="mb-6">
-              <h3 className="text-lg font-semibold text-gray-800 mb-3 flex items-center gap-2">
+            <div className="mb-4 sm:mb-6">
+              <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-3 flex items-center gap-2">
                 <Info size={18} className="text-purple-600" />
                 Observações:
               </h3>
@@ -440,13 +440,13 @@ const ProductModal: React.FC<ProductModalProps> = ({
                 value={observations}
                 onChange={(e) => setObservations(e.target.value)}
                 placeholder="Ex: Sem açúcar, mais granola..."
-                className="w-full p-4 border border-gray-300 rounded-xl resize-none h-24 focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-sm"
+                className="w-full p-3 sm:p-4 border border-gray-300 rounded-xl resize-none h-20 sm:h-24 focus:outline-none focus:ring-2 focus:ring-purple-500 shadow-sm text-sm sm:text-base"
               />
             </div>
 
             {/* Quantidade */}
-            <div className="mb-6">
-              <h3 className="text-lg font-semibold text-gray-800 mb-3">Quantidade:</h3>
+            <div className="mb-4 sm:mb-6">
+              <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-3">Quantidade:</h3>
               <div className="flex items-center gap-4 bg-gray-50 p-3 rounded-xl border border-gray-200">
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
@@ -454,7 +454,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
                 >
                   <Minus size={20} />
                 </button>
-                <span className="text-2xl font-semibold w-12 text-center">{quantity}</span>
+                <span className="text-xl sm:text-2xl font-semibold w-12 text-center">{quantity}</span>
                 <button
                   onClick={() => setQuantity(quantity + 1)}
                   className="bg-white hover:bg-gray-100 border border-gray-300 rounded-full p-2 transition-colors shadow-sm"
@@ -465,8 +465,8 @@ const ProductModal: React.FC<ProductModalProps> = ({
             </div>
 
             {/* Resumo do Preço */}
-            <div className="mb-6 p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-100 shadow-sm">
-              <h3 className="text-lg font-semibold text-green-800 mb-3">Resumo do Pedido</h3>
+            <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-100 shadow-sm">
+              <h3 className="text-base sm:text-lg font-semibold text-green-800 mb-3">Resumo do Pedido</h3>
               <div className="space-y-2">
                 <div className="flex justify-between text-sm text-gray-600">
                   <span>Produto base:</span>
@@ -483,7 +483,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
                   <span className="font-medium">{quantity}x</span>
                 </div>
                 <div className="border-t border-green-200 my-2 pt-2"></div>
-                <div className="flex justify-between font-bold text-green-800">
+                <div className="flex justify-between font-bold text-green-800 text-base sm:text-lg">
                   <span>Total:</span>
                   <span>{formatPrice(getTotalPrice())}</span>
                 </div>
@@ -493,12 +493,12 @@ const ProductModal: React.FC<ProductModalProps> = ({
         </div>
 
         {/* Footer with Add to Cart button - fixed at bottom */}
-        <div className="p-4 border-t border-gray-200 bg-white">
+        <div className="p-3 sm:p-4 border-t border-gray-200 bg-white flex-shrink-0">
           {/* Botão Adicionar */}
           <button
             onClick={handleAddToCart}
             disabled={!isAvailable}
-            className={`w-full py-4 rounded-xl font-semibold text-lg transition-all duration-300 flex items-center justify-center gap-2 shadow-md ${
+            className={`w-full py-3 sm:py-4 rounded-xl font-semibold text-base sm:text-lg transition-all duration-300 flex items-center justify-center gap-2 shadow-md ${
               !isAvailable
                 ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                 : 'bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white hover:shadow-lg transform hover:scale-[1.02]'
